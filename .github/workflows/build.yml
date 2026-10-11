@@ -1,0 +1,24 @@
+name: Build ISO
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: "amd64 (64-bit) or i386 (32-bit)"
+        default: "amd64"
+      kernel:
+        description: "Blank = Debian kernel, auto = compile newest 6.1 LTS (amd64 only)"
+        default: ""
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build inside Debian 12
+        run: |
+          docker run --rm --privileged -v "$PWD":/work -w /work -e ARCH="${{ inputs.arch }}" -e KERNEL_VERSION="${{ inputs.kernel }}" debian:bookworm bash ./build-lumen-os.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lumen-os-iso
+          path: "*.iso"
+          compression-level: 0
