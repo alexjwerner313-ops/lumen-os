@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 340
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Build inside Debian 12
         run: |
           docker run --rm --privileged -v "$PWD":/work -w /work -e ARCH="${{ inputs.arch }}" -e KERNEL_VERSION="${{ inputs.kernel }}" debian:bookworm bash ./build-lumen-os.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: lumen-os-iso
           path: "*.iso"
